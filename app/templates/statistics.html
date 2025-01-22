@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Library Statistics</h1>
+<p><strong>Average Loans per User:</strong> {{ avg_loans }}</p>
+<p><strong>Average Loan Duration:</strong> {{ avg_duration }} days</p>
+
+<h2>Top Users by Loan Count</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>Number of Loans</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user_id, count in top_users %}
+        <tr>
+            <td>{{ user_id }}</td>
+            <td>{{ count }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
