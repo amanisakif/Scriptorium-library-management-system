@@ -2,24 +2,74 @@
 
 {% block content %}
 <h1>Library Statistics</h1>
-<p><strong>Average Loans per User:</strong> {{ avg_loans }}</p>
-<p><strong>Average Loan Duration:</strong> {{ avg_duration }} days</p>
 
-<h2>Top Users by Loan Count</h2>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>User ID</th>
-            <th>Number of Loans</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user_id, count in top_users %}
-        <tr>
-            <td>{{ user_id }}</td>
-            <td>{{ count }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<!-- Statistics Summary -->
+<div class="row mt-4">
+  <div class="col-md-6">
+    <div class="card text-white bg-info mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Average Loans per User</h5>
+        <p class="card-text">{{ avg_loans }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card text-white bg-warning mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Average Loan Duration</h5>
+        <p class="card-text">{{ avg_duration }} days</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Top Users Chart -->
+<div class="row mt-4">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">Top Users by Loan Count</h5>
+        <canvas id="topUsersChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
+
+<!-- Add Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Log the data to ensure it's being passed correctly
+  console.log('Top Users:', {{ top_users|tojson }});
+
+  var labels = {{ top_users|map(attribute=0)|tojson }};
+  var data = {{ top_users|map(attribute=1)|tojson }};
+
+  console.log('Labels:', labels);
+  console.log('Data:', data);
+
+  var ctx = document.getElementById('topUsersChart').getContext('2d');
+  var chart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Number of Loans',
+        data: data,
+        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+});
+</script>

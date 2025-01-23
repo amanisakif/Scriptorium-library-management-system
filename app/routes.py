@@ -67,9 +67,12 @@ def statistics():
     ]
     avg_duration = sum(durations) / len(durations) if durations else 0
 
-    # Top 3 users by loan count
+    # Top 10 users by loan count
     user_loan_counts = Counter([loan.user_id for loan in Loan.query.all()])
-    top_users = user_loan_counts.most_common(3)
+    top_users = user_loan_counts.most_common(10)
+
+    # Debugging print to verify data
+    print("Top Users Data:", top_users)
 
     return render_template(
         'statistics.html',

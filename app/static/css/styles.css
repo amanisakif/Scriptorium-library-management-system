@@ -1,0 +1,20 @@
+/* static/css/styles.css */
+.book-item:hover {
+    transform: scale(1.05);
+    transition: transform 0.2s;
+  }
+  
+  /* Example for carousel caption */
+  .carousel-caption h5, .carousel-caption p {
+    background-color: rgba(0, 0, 0, 0.5);
+    display: inline-block;
+  }
+  
+  /* Badge styles */
+  .badge-success {
+    background-color: #28a745;
+  }
+  .badge-danger {
+    background-color: #dc3545;
+  }
+  
