@@ -57,17 +57,17 @@ def statistics():
     """
     Present descriptive statistics about loans.
     """
-    # Average loans per user
+    # Calculate average loans per user
     avg_loans = Loan.query.count() / User.query.count()
 
-    # Average loan duration (for returned books)
+    # Calculate average loan duration (for returned books)
     durations = [
         (pd.to_datetime(loan.return_date) - pd.to_datetime(loan.loan_date)).days
         for loan in Loan.query.filter(Loan.return_date.isnot(None)).all()
     ]
     avg_duration = sum(durations) / len(durations) if durations else 0
 
-    # Top 10 users by loan count
+    # Get top 10 users by loan count
     user_loan_counts = Counter([loan.user_id for loan in Loan.query.all()])
     top_users = user_loan_counts.most_common(10)
 
