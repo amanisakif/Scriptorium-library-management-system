@@ -7,44 +7,50 @@ import pandas as pd
 # Initialize the Flask app
 app = create_app()
 
-with app.app_context():
-    # Fetch data from the database
-    loans = Loan.query.all()  # Fetch all loans
-    books = Book.query.all()  # Fetch all books
-    users = User.query.all()  # Fetch all users
+def fetch_data():
+    """Fetch data from the database."""
+    loans = Loan.query.all()
+    books = Book.query.all()
+    users = User.query.all()
+    return books, loans, users
 
+def calculate_statistics(books, loans, users):
+    """Calculate and display descriptive statistics."""
     # 1. Author with the most books in the library catalog
     authors = [book.author for book in books]
     author_counts = Counter(authors)
     most_books_author = author_counts.most_common(1)[0]
-    print(f"Author with the most books: {most_books_author[0]} ({most_books_author[1]} books)")
+    print(f"\n1. Author with the most books: {most_books_author[0]} ({most_books_author[1]} books)")
 
     # 2. Most borrowed author by all users
     borrowed_authors = [loan.book.author for loan in loans]
     most_borrowed_author = Counter(borrowed_authors).most_common(1)[0]
-    print(f"Most borrowed author: {most_borrowed_author[0]} ({most_borrowed_author[1]} loans)")
+    print(f"2. Most borrowed author: {most_borrowed_author[0]} ({most_borrowed_author[1]} loans)")
 
     # 3. List of authors exclusively borrowed by each user
+    print("\n3. Authors exclusively borrowed by each user:")
     for user in users:
         user_loans = Loan.query.filter_by(user_id=user.id).all()
         user_authors = {loan.book.author for loan in user_loans}
-        print(f"User {user.name} exclusively borrowed: {', '.join(user_authors)}")
+        print(f"   - {user.name}: {', '.join(user_authors) if user_authors else 'No authors borrowed'}")
 
     # 4. Most borrowed book since the library opened
     borrowed_books = [loan.book.title for loan in loans]
     most_borrowed_book = Counter(borrowed_books).most_common(1)[0]
-    print(f"Most borrowed book: {most_borrowed_book[0]} ({most_borrowed_book[1]} times)")
+    print(f"\n4. Most borrowed book: {most_borrowed_book[0]} ({most_borrowed_book[1]} times)")
 
     # 5. User with the most simultaneous unreturned loans
     unreturned_loans = Loan.query.filter(Loan.return_date.is_(None)).all()
     user_unreturned_counts = Counter([loan.user_id for loan in unreturned_loans])
     if user_unreturned_counts:
         max_unreturned_user = user_unreturned_counts.most_common(1)[0]
-        print(f"User {max_unreturned_user[0]} has the most unreturned loans ({max_unreturned_user[1]} loans).")
+        max_user_name = User.query.get(max_unreturned_user[0]).name
+        print(f"5. User with the most unreturned loans: {max_user_name} ({max_unreturned_user[1]} loans)")
     else:
-        print("No unreturned loans found.")
+        print("5. No unreturned loans found.")
 
-    # 6. Visualization: Probability density of Goodreads ratings
+def plot_probability_density(books):
+    """Plot the probability density of Goodreads ratings."""
     ratings = [book.goodread_rating for book in books]
     plt.hist(ratings, bins=10, density=True, alpha=0.7, color='blue')
     plt.title("Goodreads Ratings Probability Density")
@@ -52,7 +58,8 @@ with app.app_context():
     plt.ylabel("Density")
     plt.show()
 
-    # 7. Visualization: Scatter plot of pages vs borrowing duration
+def plot_pages_vs_borrowing_duration(loans):
+    """Scatter plot of pages vs borrowing duration."""
     pages = []
     durations = []
     for loan in loans:
@@ -67,7 +74,8 @@ with app.app_context():
     plt.ylabel("Duration (days)")
     plt.show()
 
-    # 8. Visualization: Bar chart of top 3 most borrowed authors
+def plot_top_borrowed_authors(author_counts):
+    """Bar chart of the top 3 most borrowed authors."""
     top_authors = author_counts.most_common(3)
     author_names, author_borrow_counts = zip(*top_authors)
     plt.bar(author_names, author_borrow_counts, color='orange')
@@ -76,7 +84,8 @@ with app.app_context():
     plt.ylabel("Number of Loans")
     plt.show()
 
-    # 9. Visualization: Loans over time
+def plot_loans_over_time(loans):
+    """Line chart showing the number of loans over time."""
     loan_dates = [pd.to_datetime(loan.loan_date) for loan in loans]
     loan_df = pd.DataFrame({'Date': loan_dates})
     loan_df['Month'] = loan_df['Date'].dt.to_period('M')
@@ -86,3 +95,22 @@ with app.app_context():
     plt.xlabel("Month")
     plt.ylabel("Number of Loans")
     plt.show()
+
+# Main logic
+with app.app_context():
+    print("Fetching data...")
+    books, loans, users = fetch_data()
+
+    if not books or not loans or not users:
+        print("The database is empty or incomplete. Please populate the database and try again.")
+    else:
+        print("\n=== Library Statistics ===")
+        calculate_statistics(books, loans, users)
+
+        print("\nGenerating visualizations...")
+        plot_probability_density(books)
+        plot_pages_vs_borrowing_duration(loans)
+        plot_top_borrowed_authors(Counter([loan.book.author for loan in loans]))
+        plot_loans_over_time(loans)
+
+    print("\nDone.")

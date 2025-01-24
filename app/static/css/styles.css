@@ -1,20 +1,181 @@
-/* static/css/styles.css */
+/* Original Styles */
 .book-item:hover {
-    transform: scale(1.05);
-    transition: transform 0.2s;
+  transform: scale(1.05);
+  transition: transform 0.2s;
+}
+
+/* Carousel caption */
+.carousel-caption h5, .carousel-caption p {
+  background-color: rgba(0, 0, 0, 0.5);
+  display: inline-block;
+}
+
+/* Badge styles */
+.badge-success {
+  background-color: #28a745;
+}
+.badge-danger {
+  background-color: #dc3545;
+}
+
+/* Styling for text content on homepage */
+.overlay-content {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 35%;
+    height: 100%;
+    text-align: left;
+    background: rgba(255, 255, 255, 0.85);
+    color: black;
+    padding: 30px;
+    border-radius: 0 10px 10px 0;
+    box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+    font-size: 2.5rem;
+    color: #343a40;
+    font-weight: bold;
+}
+
+h3 {
+    color: #007bff;
+    font-size: 1.5rem;
+}
+
+ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+ul li {
+    margin: 10px 0;
+}
+
+ul li strong {
+    color: #007bff;
+}
+/* Animation for the descriptive text on the home page */
+.home-page .fade-in-text {
+  opacity: 0;
+  animation: fadeInText 1s ease-out forwards;
+}
+
+@keyframes fadeInText {
+  0% {
+    opacity: 0;
+    transform: translateY(20px); /* Start from below */
   }
-  
-  /* Example for carousel caption */
-  .carousel-caption h5, .carousel-caption p {
-    background-color: rgba(0, 0, 0, 0.5);
-    display: inline-block;
+  100% {
+    opacity: 1;
+    transform: translateY(0); /* Move to normal position */
   }
-  
-  /* Badge styles */
-  .badge-success {
-    background-color: #28a745;
-  }
-  .badge-danger {
-    background-color: #dc3545;
-  }
-  
+}
+
+/* Styling for the simulate data button in the top-right */
+#simulateButton {
+    background-color: #007bff; /* Sky blue */
+    border: none;
+    color: white;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#simulateButton:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+#simulateButton:disabled {
+    background-color: #e0e0e0;
+    cursor: not-allowed;
+}
+
+#simulateButton.btn-success {
+    background-color: #28a745; /* Green color when clicked */
+}
+/* New Styles for Statistics Page */
+
+/* Section headers */
+.statistics-header {
+  color: #343a40;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Statistics container */
+.statistics-box {
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  margin-bottom: 20px;
+  height: 200px; /* Set a fixed height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.statistics-box h3 {
+  font-size: 1.2rem;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.statistics-number {
+  font-size: 2rem;
+  color: #000000;
+}
+
+/* List styling for top users */
+.statistics-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+}
+
+.statistics-list li {
+  background-color: #ffffff;
+  padding: 5px;
+  margin: 5px 0;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: #495057;
+}
+
+/* Chart canvas spacing */
+.statistics-chart {
+  margin-top: 20px;
+  display: block;
+  max-width: 100%;
+}
+/* Total Section */
+.total-section {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #343a40;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 5px 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.total-label {
+  color: #007bff;
+}
+
+.total-count {
+  font-size: 1.5rem;
+  color: #495057;
+}
+
+
+

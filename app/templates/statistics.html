@@ -1,75 +1,95 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Library Statistics</h1>
+<div class="container mt-5">
+    <h1 class="text-center fw-bold mb-4">Library Statistics</h1>
 
-<!-- Statistics Summary -->
-<div class="row mt-4">
-  <div class="col-md-6">
-    <div class="card text-white bg-info mb-3">
-      <div class="card-body">
-        <h5 class="card-title">Average Loans per User</h5>
-        <p class="card-text">{{ avg_loans }}</p>
-      </div>
+    <!-- Statistics Boxes -->
+    <div class="row text-center">
+        <!-- Average Loans Per User -->
+        <div class="col-md-4 mb-3">
+            <div class="statistics-box">
+                <h3 class="fw-bold">Average Loans Per User</h3>
+                <p class="statistics-number">{{ avg_loans }}</p>
+            </div>
+        </div>
+        <!-- Average Loan Duration -->
+        <div class="col-md-4 mb-3">
+            <div class="statistics-box">
+                <h3 class="fw-bold">Average Loan Duration</h3>
+                <p class="statistics-number">{{ avg_duration }} days</p>
+            </div>
+        </div>
+        <!-- Top 3 Users -->
+        <div class="col-md-4 mb-3">
+            <div class="statistics-box">
+                <h3 class="fw-bold">Top 3 Users</h3>
+                <ul class="list-unstyled">
+                    {% for user in top_users %}
+                    <li>{{ user.name }}: {{ user.loan_count }} loans</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <div class="card text-white bg-warning mb-3">
-      <div class="card-body">
-        <h5 class="card-title">Average Loan Duration</h5>
-        <p class="card-text">{{ avg_duration }} days</p>
-      </div>
+
+    <!-- Borrowing Trends -->
+    <div class="mt-5">
+        <h3 class="text-center fw-bold mb-4">Borrowing Trends</h3>
+        <div class="d-flex justify-content-center">
+            <canvas id="borrowingTrendsChart" style="max-width: 600px;"></canvas>
+        </div>
     </div>
-  </div>
 </div>
 
-<!-- Top Users Chart -->
-<div class="row mt-4">
-  <div class="col-md-12">
-    <div class="card">
-      <div class="card-body">
-        <h5 class="card-title">Top Users by Loan Count</h5>
-        <canvas id="topUsersChart"></canvas>
-      </div>
-    </div>
-  </div>
-</div>
-
-{% endblock %}
-
-<!-- Add Chart.js Script -->
+<!-- JavaScript for Borrowing Trends Chart -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  // Log the data to ensure it's being passed correctly
-  console.log('Top Users:', {{ top_users|tojson }});
+    document.addEventListener('DOMContentLoaded', function () {
+        const labels = JSON.parse('{{ borrowing_trends_labels | tojson | safe }}');
+        const data = JSON.parse('{{ borrowing_trends_data | tojson | safe }}');
 
-  var labels = {{ top_users|map(attribute=0)|tojson }};
-  var data = {{ top_users|map(attribute=1)|tojson }};
-
-  console.log('Labels:', labels);
-  console.log('Data:', data);
-
-  var ctx = document.getElementById('topUsersChart').getContext('2d');
-  var chart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [{
-        label: 'Number of Loans',
-        data: data,
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-        borderColor: 'rgba(75, 192, 192, 1)',
-        borderWidth: 1
-      }]
-    },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
-    }
-  });
-});
+        const ctx = document.getElementById('borrowingTrendsChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Number of Loans Over Time',
+                    data: data,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.3,
+                    borderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Monthly Borrowing Trends'
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Loans'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Months'
+                        }
+                    }
+                }
+            }
+        });
+    });
 </script>
+{% endblock %}
