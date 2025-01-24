@@ -24,8 +24,8 @@ Ensure you have the following installed:
 ### Steps
 1. Clone this repository:
    ```bash
-   git clone https://github.com/amanisakif/Scriptorium-library-management-system.git
-   cd scriptorium
+   git clone https://github.com/amanisakif/scriptorium-library-management-system.git
+   cd scriptorium-library-management-system
 
 ### Set up virtual envioronment 
 python3 -m venv venv
