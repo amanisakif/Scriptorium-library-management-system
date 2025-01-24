@@ -1,6 +1,7 @@
-Flask
-Flask-SQLAlchemy
-numpy
-matplotlib
-pandas
-Flask-WTF
+Flask==2.2.2
+Flask-SQLAlchemy==2.5.1
+Flask-WTF==1.0.1
+Flask-Migrate==3.1.0
+pandas==1.5.3
+matplotlib==3.6.3
+numpy==1.23.5

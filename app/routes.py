@@ -46,15 +46,23 @@ def borrowed_books():
     total_borrowed = len(books)
     return render_template('books.html', books=books, title="Borrowed Books", total=total_borrowed)
 
-
 @main.route('/users/<int:user_id>/loans')
 def user_loans(user_id):
     """
     View loan history for a specific user.
     """
     user = User.query.get_or_404(user_id)
-    loans = Loan.query.filter_by(user_id=user_id).all()
-    return render_template('user_loans.html', user=user, loans=loans, title=f"{user.name}'s Loans")
+    current_loans = Loan.query.filter_by(user_id=user_id, return_date=None).all()
+    past_loans = Loan.query.filter_by(user_id=user_id).filter(Loan.return_date.isnot(None)).all()
+    return render_template('user_loans.html', user=user, current_loans=current_loans, past_loans=past_loans, title=f"{user.name}'s Loan History")
+
+@main.route('/users')
+def all_users():
+    """
+    View all users' loan histories.
+    """
+    users = User.query.all()
+    return render_template('all_users.html', users=users, title="All Users")
 
 @main.route('/statistics')
 def statistics():
@@ -97,7 +105,6 @@ def statistics():
     except Exception as e:
         print(f"Error in /statistics route: {e}")
         return "An error occurred while generating statistics.", 500
-
 
 ### Data Simulation Route ###
 
