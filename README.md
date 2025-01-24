@@ -24,7 +24,7 @@ Ensure you have the following installed:
 ### Steps
 1. Clone this repository:
    ```bash
-   git clone https://github.com/amanisakif/library-loan-system.git
+   git clone https://github.com/amanisakif/Scriptorium-library-management-system.git
    cd scriptorium
 
 ### Set up virtual envioronment 
