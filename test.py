@@ -12,7 +12,7 @@ app = create_app()
 def fetch_data():
     """Fetch data from the database with eager loading of the related 'book' for each loan."""
     with app.app_context():
-        loans = Loan.query.options(joinedload(Loan.book)).all()  # Eagerly load the 'book' relationship
+        loans = Loan.query.options(joinedload(Loan.book)).all()  
         books = Book.query.all()
         users = User.query.all()
     return books, loans, users
@@ -48,7 +48,7 @@ def calculate_statistics(books, loans, users):
         user_unreturned_counts = Counter([loan.user_id for loan in unreturned_loans])
         if user_unreturned_counts:
             max_unreturned_user = user_unreturned_counts.most_common(1)[0]
-            session = db.session  # Use Session.get() for legacy compatibility
+            session = db.session  
             max_user_name = session.get(User, max_unreturned_user[0]).name
             print(f"5. User with the most unreturned loans: {max_user_name} ({max_unreturned_user[1]} loans)")
         else:
@@ -71,7 +71,7 @@ def plot_pages_vs_borrowing_duration(loans):
     for loan in loans:
         if loan.return_date:
             borrow_time = (pd.to_datetime(loan.return_date) - pd.to_datetime(loan.loan_date)).days
-            pages.append(loan.book.pages)  # Accessing loan.book after eager loading
+            pages.append(loan.book.pages)  
             durations.append(borrow_time)
 
     plt.scatter(pages, durations, alpha=0.6, c='green')
