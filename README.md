@@ -1,6 +1,6 @@
 # Scriptorium Library Management System
 
-This project is a Flask-based web application for managing books, users, and loans in a library. The project includes detailed setup instructions, an explanation of the file structure, and guidance on how to run the application. This README has been written to match your code and meet the assessment requirements.
+This project is a Flask-based web application for managing books, users, and loans in a library. The project includes detailed setup instructions, an explanation of the file structure, and guidance on how to run the application.
 
 ---
 
